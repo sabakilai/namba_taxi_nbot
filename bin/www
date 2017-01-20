@@ -12,7 +12,7 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '7005');
 app.set('port', port);
 
 /**
@@ -88,3 +88,30 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+var mongoose = require('mongoose');
+var connection_url = 'mongodb://localhost/cookbot';
+mongoose.connect(connection_url);
+var db = mongoose.connection;
+
+db.on('error', function(err) {
+  console.log(err);
+  var error = new Error("Database connection error");
+  throw error;
+});
+db.once('open', function() {
+  console.log('DB connection is open');
+});
+
+// Delete all chats which is not active for 30 min
+setInterval(
+  function() {
+    var Chat = require('../models/chat');
+    var currDate = Date.now();
+    Chat.remove({ updated_at: { $lte: currDate - 1800000 } }, function (err) {
+      if (err) {
+        throw err;
+      }
+    });
+
+  }, 900000);

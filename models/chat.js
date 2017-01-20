@@ -14,19 +14,23 @@ var chat = new Schema({
     type: String,
     required: true
   },
-  data: {
-    type: [{}]
+  address: {
+    type: String,
+    default: null
   },
-  created_at: {
-    type: Date,
-    default: Date.now
+  fare : {
+    type: String,
+    default: null
   },
-  updated_at: {
-    type: Date,
-    default: Date.now,
-    required: true
+  phone_number:{
+    type: String,
+    default: null
+  },{
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
   }
-
 });
 
 module.exports = mongoose.model('Chat', chat);
