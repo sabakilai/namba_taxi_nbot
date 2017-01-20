@@ -13,6 +13,7 @@ var Chat = require('../models/chat');
 var template = require('../helpers/template');
 var method = require('../helpers/TaxiApiParser');
 var validate = require('../helpers/validate');
+var findKeyWords = require('../helpers/findKeyWords');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -58,7 +59,6 @@ router.post('/', function(req, res, next) {
 		var content = req.body.data.content;
 		let chat_id = req.body.data.chat_id;
 		var addInstance = false;
-		var rendered = false;
 
 		if(content.length > 20) {
 			sendMessage(api_url, 'Не верный формат данных, пожалуйста введите текст.', chat_id, token, function() {
@@ -71,7 +71,9 @@ router.post('/', function(req, res, next) {
 				chat_id: chat_id ,
 				api_url: api_url
 			}
+
 			Chat.findOne(condition, function(err, chat) {
+				console.log(chat);
 				if(!chat) {
 					var instance = {
 						chat_id: chat_id ,
@@ -83,66 +85,69 @@ router.post('/', function(req, res, next) {
 				else {
 					var instance = chat;
 				}
-				if(chat.state == 0)
-				{
-					let keyWords = ['start','старт'];
-					if(findKeyWords(keyWords, content))
-					{
-						sendMessage(api_url, template.askAdress(), chat_id, token, function() {
-							chat.state = 1;
-						});
-					}
-					else
-					{
-						sendMessage(api_url, template.instructions(), chat_id, token, function() {
-							var rendered = true;
-							res.end();
-						});
-					}
-				}
-				else if(chat.state == 1)
-				{
-					method.fare(function(fare) {
-						sendMessage(api_url, template.askFare(fare), chat_id, token, function() {
-							chat.state = 2;
-							chat.address = content;
-						});
-					})
-				}
-				else if(chat.state == 2)
-				{	
-					method.fare(function(fare) {
-						if(validate.isFare(content, faresData))
-						{
-							sendMessage(api_url, template.askPhoneNumber(), chat_id, token, function() {
-								if(isNaN(content)) {
-									chat.state = 3;
-									chat.fare = content;
+				if(addInstance) {		
+					axilary.save(function(err) {		
+						if(instance.state == 0) {
+							let keyWords = ['start','старт'];
+							if(findKeyWords(keyWords, content)) {
+								sendMessage(api_url, template.askAdress(), chat_id, token, function() {
+									instance.state = 1;
+									Chat.update(condition, instance, null, function() {
+										res.end();
+									});
+								});
+							}
+							else {
+								sendMessage(api_url, template.instructions(), chat_id, token, function() {
+									res.end();
+								});
+							}
+						}
+						else if(instance.state == 1) {
+							method.fare(function(fare) {
+								sendMessage(api_url, template.askFare(fare), chat_id, token, function() {
+									instance.state = 2;
+									instance.address = content;
+									Chat.update(condition, instance, null, function() {
+										res.end();
+									});
+								});
+							})
+						}
+						else if(instance.state == 2) {	
+							method.fare(function(fare) {
+								if(validate.isFare(content, faresData))
+								{
+									sendMessage(api_url, template.askPhoneNumber(), chat_id, token, function() {
+										if(isNaN(content)) {
+											instance.state = 3;
+											instance.fare = content;
+											Chat.update(condition, instance, null, function() {
+												res.end();
+											});
+										}
+										else {
+											instance.state = 3;
+											instance.fare = fare[content - 1].name;
+											Chat.update(condition, instance, null, function() {
+												res.end();
+											});
+										}
+									});
 								}
 								else
-									chat.state = 3;
-									chat.fare = fare[content - 1].name;
-								});
-						}
-						else
-						{
-							sendMessage(api_url, template.notFare(fare), chat_id, token, function() {
-								var rendered = true;
-								res.end();
+								{
+									sendMessage(api_url, template.notFare(fare), chat_id, token, function() {
+										var rendered = true;
+										res.end();
+									});
+								}
 							});
 						}
 					});
 				}
-
-				if(!rendered) {
-					axilary = Chat(instance);
-					axilary.save(function(err) {
-						console.log(err);
-						res.end();
-					});
-				}
-			}
-
+			});
+		}
 			
 	}
 });

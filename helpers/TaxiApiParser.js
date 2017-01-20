@@ -1,10 +1,9 @@
 var request = require('request');
 
 /*Local modules*/
-var db = require(__dirname + '/../models/db');
 var sendMessage = require(__dirname + '/sendMessage');
 var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaWF0IjoxNDc0NzEzNTkzfQ.zUxl-bjFE84GWUW7m-u1UUYkF6N4stN5KmfC9mnBs7w';
-var template = require(__dirname + '/templates');
+var template = require(__dirname + '/template');
 var async = require('async');
 
 var fares = 'https://staging.swift.kg/api/v1/fares/';

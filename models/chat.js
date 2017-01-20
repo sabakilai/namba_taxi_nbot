@@ -25,11 +25,11 @@ var chat = new Schema({
   phone_number:{
     type: String,
     default: null
-  },{
-    timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
-    }
+  }
+},{
+  timestamps: {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
   }
 });
 

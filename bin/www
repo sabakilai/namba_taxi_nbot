@@ -90,7 +90,7 @@ function onListening() {
 }
 
 var mongoose = require('mongoose');
-var connection_url = 'mongodb://localhost/cookbot';
+var connection_url = 'mongodb://localhost/taxi';
 mongoose.connect(connection_url);
 var db = mongoose.connection;
 
