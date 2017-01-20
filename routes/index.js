@@ -58,6 +58,7 @@ router.post('/', function(req, res, next) {
 		var content = req.body.data.content;
 		let chat_id = req.body.data.chat_id;
 		var addInstance = false;
+		var rendered = false;
 
 		if(content.length > 20) {
 			sendMessage(api_url, 'Не верный формат данных, пожалуйста введите текст.', chat_id, token, function() {
@@ -94,6 +95,7 @@ router.post('/', function(req, res, next) {
 					else
 					{
 						sendMessage(api_url, template.instructions(), chat_id, token, function() {
+							var rendered = true;
 							res.end();
 						});
 					}
@@ -125,9 +127,18 @@ router.post('/', function(req, res, next) {
 						else
 						{
 							sendMessage(api_url, template.notFare(fare), chat_id, token, function() {
+								var rendered = true;
 								res.end();
 							});
 						}
+					});
+				}
+
+				if(!rendered) {
+					axilary = Chat(instance);
+					axilary.save(function(err) {
+						console.log(err);
+						res.end();
 					});
 				}
 			}
