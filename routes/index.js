@@ -116,8 +116,6 @@ router.post('/', function(req, res, next) {
 							});
 						}
 						else if(instance.state == 2) {	
-									console.log('*',content);
-
 							jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
 								if(validate.isFare(content, faresData))
 								{
@@ -141,11 +139,24 @@ router.post('/', function(req, res, next) {
 								else
 								{
 									sendMessage(api_url, template.notFare(faresData), chat_id, token, function() {
-										var rendered = true;
 										res.end();
 									});
 								}
 							});
+						}
+						else if(instance.state == 3) {
+							if(validate.isPhoneNumber(content))
+							{
+								sendMessage(api_url, template.summary(instance,content), chat_id, token, function() {
+									res.end();
+								});
+							}
+							else
+							{
+								sendMessage(api_url, template.notPhoneNumber(), chat_id, token, function() {
+									res.end();
+								});
+							}
 						}
 					});
 				/*}
