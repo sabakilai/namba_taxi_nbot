@@ -163,6 +163,47 @@ router.post('/', function(req, res, next) {
 								});
 							}
 						}
+						else if(instance.state == 4) {
+							let keyWords = ['да','заказать','все верно'];
+							if(findKeyWords(keyWords, content))
+							{	
+								jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
+									let phone_number = instance.phone_number;
+									let address = instance.address;
+									let fare = method.getFareId(instance.fare,faresData);
+									method.order(phone_number,address,fare, function(result) {
+										if(typeof result.order_id != 'undefined')
+										{
+											sendMessage(api_url, 'Ваш заказ принят, возможен звонок оператора!\nНомер заказа:' + result.order_id, chat_id, token, function() {
+												instance.state = 0;
+												Chat.update(condition, instance, null, function() {
+													res.end();
+												});
+												//develop this one - db.changeStatus(chat_id, res.order_id,1); 
+											});
+										}
+										else
+										{
+											sendMessage(api_url,'Ошибка сервера.', chat_id, token, function() {
+												instance.state = 0;
+												Chat.update(condition, instance, null, function() {
+													res.end();
+												}); 
+											});
+										}
+									});
+								});
+							}
+							else
+							{
+								sendMessage(api_url,'Заказ отменен.', chat_id, token, function() {
+									instance.state = 0;
+									Chat.update(condition, instance, null, function() {
+										res.end();
+									}); 
+								});
+							}
+						}
 					});
 				/*}
 				else {

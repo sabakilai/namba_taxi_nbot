@@ -13,7 +13,7 @@ var order = 'https://staging.swift.kg/api/v1/requests/';
 exports.fares = function(callback)
 {
 	let data
-	request.post({url: fares, form: {partner_id: 1,server_token: 'RcQ5tP1VsD6u0jt0hou5vFOqmXyrBA8V'}}, function(err,res,body){
+	request.post({url: fares, form: {partner_id: 2,server_token: ' jOoALtG35L9A4HC15dOGUTco2lqJcrz1'}}, function(err,res,body){
 		data = JSON.parse(body);
 		data = data.fares;
 		var fares = [];
