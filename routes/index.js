@@ -4,7 +4,7 @@ var jsonfile = require('jsonfile');
 
 // Bot settings
 var chat_name = 'Намба Такси';
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaXNCb3QiOnRydWUsImNvdW50cnkiOnRydWUsImlhdCI6MTQ4NTMyNDM4MX0.xeJba2cYbe87XwdrF0HY5bq7P-OdWfnRWnlOBsh9dJQ';
+var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaXNCb3QiOnRydWUsImNvdW50cnkiOnRydWUsImlhdCI6MTQ4NTMzMDY4M30.d7GPBHrS6dY5OzYEf4skDaAfMasIAO4SfkEP4RS9fw8';
 var img_token = '';
 
 // Local
@@ -39,7 +39,7 @@ router.post('/', function(req, res, next) {
 		let user_id = req.body.data.id;
 		createChat(api_url, user_id, chat_name, token, img_token, function(error, response, body) {
 			let chat_id = body.data.membership.chat_id;
-			sendMessage(api_url, template.wellcome(), chat_id, token, function() {
+			sendMessage(api_url, template.instructions(), chat_id, token, function() {
 				res.end();
 			});
 		});
@@ -147,9 +147,14 @@ router.post('/', function(req, res, next) {
 						else if(instance.state == 3) {
 							if(validate.isPhoneNumber(content))
 							{
-								sendMessage(api_url, template.summary(instance,content), chat_id, token, function() {
-									res.end();
+								instance.state = 4;
+								instance.phone_number = content;
+								Chat.update(condition, instance, null, function() {
+									sendMessage(api_url, template.summary(instance,content), chat_id, token, function() {
+										res.end();
+									});
 								});
+								
 							}
 							else
 							{
