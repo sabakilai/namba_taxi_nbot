@@ -2,7 +2,6 @@ var request = require('request');
 
 /*Local modules*/
 var sendMessage = require(__dirname + '/sendMessage');
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaWF0IjoxNDc0NzEzNTkzfQ.zUxl-bjFE84GWUW7m-u1UUYkF6N4stN5KmfC9mnBs7w';
 var template = require(__dirname + '/template');
 var async = require('async');
 
@@ -32,4 +31,66 @@ exports.fares = function(callback)
 			callback(fares);
 		}
 	});
+}
+
+
+exports.order = function(phone_number, address, fare, callback)
+{
+	fare ++;
+	let data;
+	request.post({url: order, form: {phone_number: phone_number,address: address,fare: fare, partner_id: 1,server_token: 'RcQ5tP1VsD6u0jt0hou5vFOqmXyrBA8V'}}, function(err,res,body){
+		data = JSON.parse(body);
+		if(callback)
+		{
+			callback(data);
+		}
+	});
+}
+
+exports.payment = function(callback)
+{
+	let data
+	request.post({url: payment, form: {partner_id: 1,server_token: 'RcQ5tP1VsD6u0jt0hou5vFOqmXyrBA8V'}}, function(err,res,body){
+		data = JSON.parse(body);
+		if(callback)
+		{
+			callback(data);
+		}
+	});
+}
+
+exports.options = function(callback)
+{
+	let data
+	request.post({url: options, form: {partner_id: 1,server_token: 'RcQ5tP1VsD6u0jt0hou5vFOqmXyrBA8V'}}, function(err,res,body){
+		data = JSON.parse(body);
+		if(callback)
+		{
+			callback(data);
+		}
+	});
+}
+
+exports.getFareId = function(value,fareData)
+{
+	for(let key in fareData)
+	{
+		if(fareData[key].name == value)
+			return key;
+	}
+	return false;
+}
+
+
+//input status name
+//returns status number or -1
+var convertStatusName = function(name)
+{
+	var temp = ['Новый заказ','Принят','Ложный заказ','Выполнен','Клиент на борту','Машина на месте','Отклонен','Ожидание','Следующий заказ'];
+	for(let key in temp)
+	{
+		if(temp[key] == name)
+			return key;
+	}
+	return -1;
 }

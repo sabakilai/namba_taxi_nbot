@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var jsonfile = require('jsonfile');
 
 // Bot settings
-var chat_name = 'Бот повар';
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NDIwLCJwaG9uZSI6IjA1NTc5OTYwMTUiLCJwYXNzd29yZCI6IiQyYSQxMCROeUhqYVhpUGs5U0lTTWVIVldhT20uN1UvcGVwNXV3d0FDZ2kyQ0E4UmhBVHVKUllWRzJrVyIsImlzQm90Ijp0cnVlLCJjb3VudHJ5Ijp0cnVlLCJpYXQiOjE0ODQzMDA0Nzh9.QcJPmXA-HNwIH9Vr7K56fcagKe8oubeWQS8S62o6Yog';
+var chat_name = 'Намба Такси';
+var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaXNCb3QiOnRydWUsImNvdW50cnkiOnRydWUsImlhdCI6MTQ4NTMyNDM4MX0.xeJba2cYbe87XwdrF0HY5bq7P-OdWfnRWnlOBsh9dJQ';
 var img_token = '';
 
 // Local
@@ -75,18 +76,18 @@ router.post('/', function(req, res, next) {
 			Chat.findOne(condition, function(err, chat) {
 				console.log(chat);
 				if(!chat) {
-					var instance = {
+					var instance = Chat({
 						chat_id: chat_id ,
 						api_url: api_url ,
 						state: 0
-					}
+					});
 					addInstance = true;
 				}
 				else {
 					var instance = chat;
 				}
-				if(addInstance) {		
-					axilary.save(function(err) {		
+				//if(addInstance) {		
+					instance.save(function(err) {		
 						if(instance.state == 0) {
 							let keyWords = ['start','старт'];
 							if(findKeyWords(keyWords, content)) {
@@ -104,18 +105,20 @@ router.post('/', function(req, res, next) {
 							}
 						}
 						else if(instance.state == 1) {
-							method.fare(function(fare) {
-								sendMessage(api_url, template.askFare(fare), chat_id, token, function() {
+							jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
+								sendMessage(api_url, template.askFare(faresData), chat_id, token, function() {
 									instance.state = 2;
 									instance.address = content;
 									Chat.update(condition, instance, null, function() {
 										res.end();
 									});
 								});
-							})
+							});
 						}
 						else if(instance.state == 2) {	
-							method.fare(function(fare) {
+									console.log('*',content);
+
+							jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
 								if(validate.isFare(content, faresData))
 								{
 									sendMessage(api_url, template.askPhoneNumber(), chat_id, token, function() {
@@ -128,7 +131,7 @@ router.post('/', function(req, res, next) {
 										}
 										else {
 											instance.state = 3;
-											instance.fare = fare[content - 1].name;
+											instance.fare = faresData[content - 1].name;
 											Chat.update(condition, instance, null, function() {
 												res.end();
 											});
@@ -137,7 +140,7 @@ router.post('/', function(req, res, next) {
 								}
 								else
 								{
-									sendMessage(api_url, template.notFare(fare), chat_id, token, function() {
+									sendMessage(api_url, template.notFare(faresData), chat_id, token, function() {
 										var rendered = true;
 										res.end();
 									});
@@ -145,7 +148,10 @@ router.post('/', function(req, res, next) {
 							});
 						}
 					});
-				}
+				/*}
+				else {
+					res.end();
+				}*/
 			});
 		}
 			
