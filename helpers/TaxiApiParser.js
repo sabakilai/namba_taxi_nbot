@@ -105,7 +105,7 @@ var convertStatusName = function(name)
 //update statuses every 15 sec.
 exports.updateStatuses = function()
 {
-	Status.find({status : { $gt: 0 }}, function(err, statuses){
+	Status.find({status : { $gte: 0 }}, function(err, statuses){
 
 		console.log();
 		console.log();
