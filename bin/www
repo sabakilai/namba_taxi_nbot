@@ -132,6 +132,5 @@ setInterval(function() {
 
 //every 15sec send post request to check and updated statuses
 setInterval(function() {
-    console.log('x');
     apiParse.updateStatuses();
-}, 3000);
+}, 15000);
