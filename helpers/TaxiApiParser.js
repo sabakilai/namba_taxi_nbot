@@ -12,8 +12,6 @@ var order = 'https://staging.swift.kg/api/v1/requests/';
 
 var partner_id = 2;
 var server_token = 'jOoALtG35L9A4HC15dOGUTco2lqJcrz1';
-// namba one api
-var api_url = 'http://77.235.20.133:3000/';
 
 /* Models */
 var Status = require('../models/status');
@@ -127,27 +125,27 @@ exports.updateStatuses = function()
 				{
 					if(statusNumber == 1)
 					{
-						sendMessage(api_url, template.driverGetOrder(data.driver), chat_id, token);
+						sendMessage(item.api_url, template.driverGetOrder(data.driver), item.chat_id, token);
 					}
 					else if(statusNumber == 2)
 					{
-						sendMessage(api_url,' Заказ помечен водителем, как ложный.', item.chat_id, token);
+						sendMessage(item.api_url,' Заказ помечен водителем, как ложный.', item.chat_id, token);
 					}
 					else if(statusNumber == 3)
 					{
-						sendMessage(api_url, 'Заказ завершен.', item.chat_id, token);
+						sendMessage(item.api_url, 'Заказ завершен.', item.chat_id, token);
 					}
 					else if(statusNumber == 5)
 					{
-						sendMessage(api_url, template.carOnPlace(data.driver), item.chat_id, token);
+						sendMessage(item.api_url, template.carOnPlace(data.driver), item.chat_id, token);
 					}
 					else if(statusNumber == 6)
 					{
-						sendMessage(api_url, 'Заказ отменен.', item.chat_id, token);
+						sendMessage(item.api_url, 'Заказ отменен.', item.chat_id, token);
 					}
 					else if(statusNumber == 8)
 					{
-						sendMessage(api_url, 'Водитель поедет в вам, как только закончит текущий заказ.', item.chat_id, token);
+						sendMessage(item.api_url, 'Водитель поедет в вам, как только закончит текущий заказ.', item.chat_id, token);
 					}
 					
 				}
