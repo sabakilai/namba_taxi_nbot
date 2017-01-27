@@ -106,16 +106,21 @@ var convertStatusName = function(name)
 exports.updateStatuses = function()
 {
 	Status.find({status : { $gt: 0 }}, function(err, statuses){
+
+		console.log();
+		console.log();
+		console.log();
+
 		async.eachSeries(statuses, function iteratee(item, cb)
 		{	
 			console.log(item.order_id);
 			console.log('--------------------------------');
-
 			let url = order + item.order_id + '/';
 			request.post({url: url, form: {partner_id: partner_id,server_token: server_token}}, function(err,res,body){
 				data = JSON.parse(body);
 				var statusNumber = convertStatusName(data.status);
 				
+				console.log(item);
 				console.log("curr statusNumber");
 				console.log(statusNumber);
 				console.log("previous");
@@ -142,6 +147,9 @@ exports.updateStatuses = function()
 					}
 					else if(statusNumber == 6)
 					{
+						console.log(item.api_url);
+						console.log(item.chat_id);
+						console.log(token);
 						sendMessage(item.api_url, 'Заказ отменен.', item.chat_id, token);
 					}
 					else if(statusNumber == 8)

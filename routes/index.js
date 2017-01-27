@@ -175,6 +175,7 @@ router.post('/', function(req, res, next) {
 									let address = instance.address;
 									let fare = method.getFareId(instance.fare,faresData);
 									method.order(phone_number,address,fare, function(result) {
+										console.log(result);
 										if(typeof result.order_id != 'undefined')
 										{
 											sendMessage(api_url, 'Ваш заказ принят, возможен звонок оператора!\nНомер заказа:' + result.order_id, chat_id, token, function() {
