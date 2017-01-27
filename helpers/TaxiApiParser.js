@@ -12,6 +12,7 @@ var order = 'https://staging.swift.kg/api/v1/requests/';
 
 var partner_id = 2;
 var server_token = 'jOoALtG35L9A4HC15dOGUTco2lqJcrz1';
+var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaXNCb3QiOnRydWUsImNvdW50cnkiOnRydWUsImlhdCI6MTQ4NTMzMDY4M30.d7GPBHrS6dY5OzYEf4skDaAfMasIAO4SfkEP4RS9fw8';
 
 /* Models */
 var Status = require('../models/status');
