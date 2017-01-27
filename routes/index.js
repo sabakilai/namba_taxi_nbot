@@ -175,6 +175,7 @@ router.post('/', function(req, res, next) {
 									let address = instance.address;
 									let fare = method.getFareId(instance.fare,faresData);
 									console.log(fare);
+									
 									method.order(phone_number,address,fare, function(result) {
 										console.log(result);
 										if(typeof result.order_id != 'undefined')
@@ -190,7 +191,7 @@ router.post('/', function(req, res, next) {
 															status: 0
 														});
 														statusInstance.save(function(err) {
-															Chat.update(condition, instance, null, function() {
+															Chat.save(condition, instance, null, function() {
 																res.end();
 															});
 														});
