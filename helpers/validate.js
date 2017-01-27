@@ -1,19 +1,16 @@
 exports.isPhoneNumber = function(value)
 {
+	if(value.substr(0, 3) != '996')
+		return false;
 	let counter = 0;
-	let c = 0;
 	for(let key in value)
 	{
 		if(!isNaN(value[key]))
 		{
 			counter ++;
 		}
-		else if(key != 0)
-		{
-			return false;
-		}
 	}
-	if(counter >= 9)
+	if(counter == 12)
 	{
 		return true;
 	}
