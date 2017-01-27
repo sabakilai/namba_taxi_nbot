@@ -174,6 +174,7 @@ router.post('/', function(req, res, next) {
 									let phone_number = instance.phone_number;
 									let address = instance.address;
 									let fare = method.getFareId(instance.fare,faresData);
+									console.log(fare);
 									method.order(phone_number,address,fare, function(result) {
 										console.log(result);
 										if(typeof result.order_id != 'undefined')
