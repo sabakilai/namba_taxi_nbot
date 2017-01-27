@@ -141,13 +141,21 @@ exports.updateStatuses = function()
 					{
 						sendMessage(item.api_url, 'Заказ завершен.', item.chat_id, token);
 					}
+					else if(statusNumber == 4)
+					{
+						sendMessage(item.api_url, 'Клиент на борту.', item.chat_id, token);
+					}
 					else if(statusNumber == 5)
 					{
-						sendMessage(item.api_url, template.carOnPlace(data.driver), item.chat_id, token);
+						sendMessage(item.api_url, 'Машина на месте', item.chat_id, token);
 					}
 					else if(statusNumber == 6)
 					{
 						sendMessage(item.api_url, 'Заказ отменен.', item.chat_id, token);
+					}
+					else if(statusNumber == 7)
+					{
+						sendMessage(item.api_url, 'Ожидание, водитель на месте.', item.chat_id, token);
 					}
 					else if(statusNumber == 8)
 					{
@@ -164,6 +172,7 @@ exports.updateStatuses = function()
 					});
 				}
 				else {
+					item.status = statusNumber;
 					Status.update({chat_id: item.chat_id}, item, null, function() {
 						cb();		
 					});

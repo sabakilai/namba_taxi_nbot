@@ -197,7 +197,10 @@ router.post('/', function(req, res, next) {
 												}
 												else {
 													sendMessage(api_url, 'Вы не можете заказать 2 такси одновременно.', chat_id, token, function(){
-														res.end();
+														instance.state = 0;
+														Chat.update(condition, instance, null, function() {
+															res.end();
+														}); 
 													});
 												}
 											});

@@ -38,7 +38,7 @@ exports.summary = function(object,phone_number)
 
 exports.notPhoneNumber = function()
 {
-	return 'Неверный формат\uE413\n\"0557996009\"\n\uE00F Поробуй вот так.'
+	return 'Неверный формат\uE413\n\"996557996009\"\n\uE00F Поробуй вот так.'
 }
 
 exports.notFare = function(data)
