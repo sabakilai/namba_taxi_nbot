@@ -186,7 +186,7 @@ router.post('/', function(req, res, next) {
 															chat_id: chat_id,
 															api_url: api_url,
 															order_id: result.order_id,
-															status: 1
+															status: 0
 														});
 														statusInstance.save(function(err) {
 															Chat.update(condition, instance, null, function() {
