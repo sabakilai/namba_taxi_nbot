@@ -177,20 +177,29 @@ router.post('/', function(req, res, next) {
 									method.order(phone_number,address,fare, function(result) {
 										console.log(result);
 										if(typeof result.order_id != 'undefined')
-										{
-											sendMessage(api_url, 'Ваш заказ принят, возможен звонок оператора!\nНомер заказа:' + result.order_id, chat_id, token, function() {
-												instance.state = 0;
-												var statusInstance = Status({
-													chat_id: chat_id,
-													api_url: api_url,
-													order_id: result.order_id,
-													status: 1
-												});
-												statusInstance.save(function(err) {
-													Chat.update(condition, instance, null, function() {
+										{	
+											Status.findOne({chat_id: chat_id}, function(err, chat) {
+												if(!chat) {
+													sendMessage(api_url, 'Ваш заказ принят, возможен звонок оператора!\nНомер заказа:' + result.order_id, chat_id, token, function() {
+														instance.state = 0;
+														var statusInstance = Status({
+															chat_id: chat_id,
+															api_url: api_url,
+															order_id: result.order_id,
+															status: 1
+														});
+														statusInstance.save(function(err) {
+															Chat.update(condition, instance, null, function() {
+																res.end();
+															});
+														});
+													});
+												}
+												else {
+													sendMessage(api_url, 'Вы не можете заказать 2 такси одновременно.', chat_id, token, function(){
 														res.end();
 													});
-												});
+												}
 											});
 										}
 										else
