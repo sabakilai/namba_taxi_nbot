@@ -157,15 +157,19 @@ exports.updateStatuses = function()
 				}
 				console.log('dasdsadsadas',statusNumber);
 				if(statusNumber == 6 || statusNumber == 2 || statusNumber == 3) {
-					item.status = 0;
+					Status.remove({ chat_id: item.chat_id, order_id: item.order_id }, function (err) {
+						if (err)
+							throw err
+						cb();
+					});
 				}
 				else {
-					item.status = statusNumber;
+					Status.update({chat_id: item.chat_id}, item, null, function() {
+						cb();		
+					});
 				}
 
-				Status.update({chat_id: item.chat_id}, item, null, function() {
-					cb();		
-				});
+				
 			});
 		}, function done() {
 			//callback do nothing.
