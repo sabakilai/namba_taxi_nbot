@@ -135,22 +135,11 @@ exports.updateStatuses = function()
 					}
 					else if(statusNumber == 2)
 					{
-						sendMessage(item.api_url, 'Заказ завершен.', item.chat_id, token, function() {
-							item.status = 0;
-							sendMessage(item.api_url,' Заказ помечен водителем, как ложный.', item.chat_id, token);
-							status.update({chat_id: item.chat_id}, item, null, function() {
-								cb();		
-							});
-						});
+						sendMessage(item.api_url,' Заказ помечен водителем, как ложный.', item.chat_id, token);
 					}
 					else if(statusNumber == 3)
 					{
-						sendMessage(item.api_url, 'Заказ завершен.', item.chat_id, token, function() {
-							item.status = 0;
-							Status.update({chat_id: item.chat_id}, item, null, function() {
-								cb();		
-							});
-						});
+						sendMessage(item.api_url, 'Заказ завершен.', item.chat_id, token);
 					}
 					else if(statusNumber == 5)
 					{
@@ -158,12 +147,7 @@ exports.updateStatuses = function()
 					}
 					else if(statusNumber == 6)
 					{
-						sendMessage(item.api_url, 'Заказ отменен.', item.chat_id, token, function(){
-							item.status = 0;
-							Status.update({chat_id: item.chat_id}, item, null, function() {
-								cb();		
-							});
-						});
+						sendMessage(item.api_url, 'Заказ отменен.', item.chat_id, token);
 					}
 					else if(statusNumber == 8)
 					{
@@ -171,7 +155,14 @@ exports.updateStatuses = function()
 					}
 					
 				}
-				item.status = statusNumber;
+				
+				if(statusNumber == 6 || statusNumber == 2 || statusNumber == 3) {
+					item.status = 0;
+				}
+				else {
+					item.status = statusNumber;
+				}
+				
 				Status.update({chat_id: item.chat_id}, item, null, function() {
 					cb();		
 				});
