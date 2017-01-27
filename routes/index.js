@@ -7,10 +7,13 @@ var chat_name = 'Намба Такси';
 var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaXNCb3QiOnRydWUsImNvdW50cnkiOnRydWUsImlhdCI6MTQ4NTMzMDY4M30.d7GPBHrS6dY5OzYEf4skDaAfMasIAO4SfkEP4RS9fw8';
 var img_token = '';
 
+/* Models */
+var Chat = require('../models/chat');
+var Status = require('../models/status');
+
 // Local
 var sendMessage = require('../helpers/sendMessage');
 var createChat = require('../helpers/createChat'); 
-var Chat = require('../models/chat');
 var template = require('../helpers/template');
 var method = require('../helpers/TaxiApiParser');
 var validate = require('../helpers/validate');
@@ -176,10 +179,17 @@ router.post('/', function(req, res, next) {
 										{
 											sendMessage(api_url, 'Ваш заказ принят, возможен звонок оператора!\nНомер заказа:' + result.order_id, chat_id, token, function() {
 												instance.state = 0;
-												Chat.update(condition, instance, null, function() {
-													res.end();
+												var statusInstance = Status({
+													chat_id: chat_id,
+													api_url: api_url,
+													order_id: result.order_id,
+													status: 1
 												});
-												//develop this one - db.changeStatus(chat_id, res.order_id,1); 
+												statusInstance.save(function(err) {
+													Chat.update(condition, instance, null, function() {
+														res.end();
+													});
+												});
 											});
 										}
 										else

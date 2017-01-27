@@ -10,10 +10,18 @@ var payment = 'https://staging.swift.kg/api/v1/payment-methods/';
 var options = 'https://staging.swift.kg/api/v1/request-options/';
 var order = 'https://staging.swift.kg/api/v1/requests/';
 
+var partner_id = 2;
+var server_token = 'jOoALtG35L9A4HC15dOGUTco2lqJcrz1';
+// namba one api
+var api_url = 'http://77.235.20.133:3000/';
+
+/* Models */
+var Status = require('../models/status');
+
 exports.fares = function(callback)
 {
 	let data
-	request.post({url: fares, form: {partner_id: 2,server_token: ' jOoALtG35L9A4HC15dOGUTco2lqJcrz1'}}, function(err,res,body){
+	request.post({url: fares, form: {partner_id: partner_id,server_token: server_token}}, function(err,res,body){
 		data = JSON.parse(body);
 		data = data.fares;
 		var fares = [];
@@ -38,7 +46,7 @@ exports.order = function(phone_number, address, fare, callback)
 {
 	fare ++;
 	let data;
-	request.post({url: order, form: {phone_number: phone_number,address: address,fare: fare, partner_id: 1,server_token: 'RcQ5tP1VsD6u0jt0hou5vFOqmXyrBA8V'}}, function(err,res,body){
+	request.post({url: order, form: {phone_number: phone_number,address: address,fare: fare, partner_id: partner_id,server_token: server_token}}, function(err,res,body){
 		data = JSON.parse(body);
 		if(callback)
 		{
@@ -50,7 +58,7 @@ exports.order = function(phone_number, address, fare, callback)
 exports.payment = function(callback)
 {
 	let data
-	request.post({url: payment, form: {partner_id: 1,server_token: 'RcQ5tP1VsD6u0jt0hou5vFOqmXyrBA8V'}}, function(err,res,body){
+	request.post({url: payment, form: {partner_id: 2,server_token: server_token}}, function(err,res,body){
 		data = JSON.parse(body);
 		if(callback)
 		{
@@ -62,7 +70,7 @@ exports.payment = function(callback)
 exports.options = function(callback)
 {
 	let data
-	request.post({url: options, form: {partner_id: 1,server_token: 'RcQ5tP1VsD6u0jt0hou5vFOqmXyrBA8V'}}, function(err,res,body){
+	request.post({url: options, form: {partner_id: 2,server_token: server_token}}, function(err,res,body){
 		data = JSON.parse(body);
 		if(callback)
 		{
@@ -93,4 +101,63 @@ var convertStatusName = function(name)
 			return key;
 	}
 	return -1;
+}
+
+//update statuses every 15 sec.
+exports.updateStatuses = function()
+{
+	Status.find({status : { $gt: 0 }}, function(err, statuses){
+		async.eachSeries(statuses, function iteratee(item, cb)
+		{	
+			console.log(item.order_id);
+			console.log('--------------------------------');
+
+			let url = order + item.order_id + '/';
+			request.post({url: url, form: {partner_id: partner_id,server_token: server_token}}, function(err,res,body){
+				data = JSON.parse(body);
+				var statusNumber = convertStatusName(data.status);
+				
+				console.log("curr statusNumber");
+				console.log(statusNumber);
+				console.log("previous");
+				console.log(item.status);
+				
+				/*If status changed then send apropriate message to user*/
+				if(item.status != statusNumber)
+				{
+					if(statusNumber == 1)
+					{
+						sendMessage(api_url, template.driverGetOrder(data.driver), chat_id, token);
+					}
+					else if(statusNumber == 2)
+					{
+						sendMessage(api_url,' Заказ помечен водителем, как ложный.', item.chat_id, token);
+					}
+					else if(statusNumber == 3)
+					{
+						sendMessage(api_url, 'Заказ завершен.', item.chat_id, token);
+					}
+					else if(statusNumber == 5)
+					{
+						sendMessage(api_url, template.carOnPlace(data.driver), item.chat_id, token);
+					}
+					else if(statusNumber == 6)
+					{
+						sendMessage(api_url, 'Заказ отменен.', item.chat_id, token);
+					}
+					else if(statusNumber == 8)
+					{
+						sendMessage(api_url, 'Водитель поедет в вам, как только закончит текущий заказ.', item.chat_id, token);
+					}
+					
+				}
+				item.status = statusNumber;
+				Status.update({chat_id: item.chat_id}, item, null, function() {
+					cb();		
+				});
+			});
+		}, function done() {
+			//callback do nothing.
+		});
+	});
 }

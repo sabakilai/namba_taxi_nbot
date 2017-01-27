@@ -103,15 +103,35 @@ db.once('open', function() {
   console.log('DB connection is open');
 });
 
-// Delete all chats which is not active for 30 min
+// Delete all chats which is not active for 15 min
 setInterval(
   function() {
     var Chat = require('../models/chat');
     var currDate = Date.now();
-    Chat.remove({ updated_at: { $lte: currDate - 1800000 } }, function (err) {
+    Chat.remove({ updated_at: { $lte: currDate - 900000 } }, function (err) {
       if (err) {
         throw err;
       }
     });
 
-  }, 900000);
+  }, 450000);
+
+/* Update fares data every hour */
+var apiParse = require('../helpers/TaxiApiParser');
+var jsonfile = require('jsonfile');
+
+setInterval(function() {
+    apiParse.fares(function(faresData) {
+    console.log(faresData);
+    jsonfile.writeFile('../faresData.json', faresData, function (err) {
+      console.error(err);
+    });
+  });
+}, 3600000);
+
+
+//every 15sec send post request to check and updated statuses
+setInterval(function() {
+    console.log('x');
+    apiParse.updateStatuses();
+}, 3000);
