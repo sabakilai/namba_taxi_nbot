@@ -191,7 +191,7 @@ router.post('/', function(req, res, next) {
 															status: 0
 														});
 														statusInstance.save(function(err) {
-															Chat.save(condition, instance, null, function() {
+															instance.save(function(err) {
 																res.end();
 															});
 														});
