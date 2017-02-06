@@ -5,10 +5,10 @@ var sendMessage = require(__dirname + '/sendMessage');
 var template = require(__dirname + '/template');
 var async = require('async');
 
-var fares = 'https://staging.swift.kg/api/v1/fares/';
-var payment = 'https://staging.swift.kg/api/v1/payment-methods/';
-var options = 'https://staging.swift.kg/api/v1/request-options/';
-var order = 'https://staging.swift.kg/api/v1/requests/';
+var fares = 'https://partners.swift.kg/api/v1/fares/';
+var payment = 'https://partners.swift.kg/api/v1/payment-methods/';
+var options = 'https://partners.swift.kg/api/v1/request-options/';
+var order = 'https://partners.swift.kg/api/v1/requests/';
 
 var partner_id = 22;
 var server_token = 'uM5B2I4tNs8vuquiUQirUin0Z3anE599';
