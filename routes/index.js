@@ -6,6 +6,7 @@ var jsonfile = require('jsonfile');
 var chat_name = 'Намба Такси';
 var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaXNCb3QiOnRydWUsImNvdW50cnkiOnRydWUsImlhdCI6MTQ4NTMzMDY4M30.d7GPBHrS6dY5OzYEf4skDaAfMasIAO4SfkEP4RS9fw8';
 var img_token = '';
+var axilary_ids = [1, 11, 21, 2382];
 
 /* Models */
 var Chat = require('../models/chat');
@@ -123,7 +124,9 @@ router.post('/', function(req, res, next) {
 								if(validate.isFare(content, faresData))
 								{
 									sendMessage(api_url, template.askPhoneNumber(), chat_id, token, function() {
+										console.log(content)
 										if(isNaN(content)) {
+											console.log('*****');
 											instance.state = 3;
 											instance.fare = content;
 											Chat.update(condition, instance, null, function() {
@@ -131,6 +134,7 @@ router.post('/', function(req, res, next) {
 											});
 										}
 										else {
+											console.log('-----');
 											instance.state = 3;
 											instance.fare = faresData[content - 1].name;
 											Chat.update(condition, instance, null, function() {
@@ -174,7 +178,7 @@ router.post('/', function(req, res, next) {
 									let phone_number = instance.phone_number;
 									let address = instance.address;
 									let fare = method.getFareId(instance.fare,faresData);
-									console.log(fare);
+									console.log('*',fare,'*');
 									
 									method.order(phone_number,address,fare, function(result) {
 										console.log(result);

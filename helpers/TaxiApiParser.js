@@ -43,7 +43,6 @@ exports.fares = function(callback)
 
 exports.order = function(phone_number, address, fare, callback)
 {
-	fare ++;
 	let data;
 	request.post({url: order, form: {phone_number: phone_number,address: address,fare: fare, partner_id: partner_id,server_token: server_token}}, function(err,res,body){
 		data = JSON.parse(body);
@@ -80,10 +79,11 @@ exports.options = function(callback)
 
 exports.getFareId = function(value,fareData)
 {
+	var temp = [1, 11, 21, 2382];
 	for(let key in fareData)
 	{
 		if(fareData[key].name == value)
-			return key;
+			return temp[key];
 	}
 	return false;
 }
