@@ -65,7 +65,7 @@ router.post('/', function(req, res, next) {
 		let chat_id = req.body.data.chat_id;
 		var addInstance = false;
 
-		if(content.length > 20) {
+		if(content.length > 30) {
 			sendMessage(api_url, 'Не верный формат данных, пожалуйста введите текст.', chat_id, token, function() {
 				res.end();
 			});	
