@@ -105,15 +105,15 @@ router.post('/', function(req, res, next) {
 					}
 				}
 				else if(instance.state == 1) {
-					jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
-						sendMessage(api_url, template.askFare(faresData), chat_id, token, function() {
-							instance.state = 2;
-							if(content.length >= 100) {
-								sendMessage(api_url, 'Не верный формат, введите адрес или координаты.', chat_id, token, function() {
-									res.end();
-								});
-							}
-							else {
+					if(content.length >= 100) {
+						sendMessage(api_url, 'Не верный формат, введите адрес или координаты.', chat_id, token, function() {
+							res.end();
+						});
+					}
+					else {
+						jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
+							sendMessage(api_url, template.askFare(faresData), chat_id, token, function() {
+								instance.state = 2;
 								if(content.length >= 30) {
 									content = JSON.parse(content);
 								}
@@ -133,7 +133,6 @@ router.post('/', function(req, res, next) {
 										}
 										
 									});
-									
 								}
 								else if(content.length <= 30){
 									instance.address = content;
@@ -146,9 +145,9 @@ router.post('/', function(req, res, next) {
 										res.end();
 									});
 								}
-							}
+							});
 						});
-					});
+					}
 				}
 				else if(instance.state == 2) {	
 					jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
@@ -184,6 +183,9 @@ router.post('/', function(req, res, next) {
 					if(validate.isPhoneNumber(content))
 					{
 						instance.state = 4;
+						if(content.substr(0, 1) == '0') {
+							content = content.replace("0", "996");
+						}
 						instance.phone_number = content;
 						Chat.update(condition, instance, null, function() {
 							sendMessage(api_url, template.summary(instance,content), chat_id, token, function() {
