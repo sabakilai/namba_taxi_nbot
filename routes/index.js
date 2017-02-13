@@ -108,37 +108,44 @@ router.post('/', function(req, res, next) {
 					jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
 						sendMessage(api_url, template.askFare(faresData), chat_id, token, function() {
 							instance.state = 2;
-							if(content.length >= 30) {
-								content = JSON.parse(content);
-							}
-							if(content.latitude) {
-								request('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + content.latitude + ',' + content.longitude + '&key=AIzaSyDbcJBaK7ke05PH8jujhk1FmbpvoSH93hY&language=ru', function (error, response, body) {
-									if (!error && response.statusCode == 200) {
-										body = JSON.parse(body);
-										instance.address = body.results[0].formatted_address;
-										Chat.update(condition, instance, null, function() {
-											res.end();
-										});
-									}
-									else {
-										sendMessage(api_url, 'Ошибка, введите свои координаты.', chat_id, token, function() {
-											res.end();
-										});
-									}
-									
-								});
-								
-							}
-							else if(content.length <= 30){
-								instance.address = content;
-								Chat.update(condition, instance, null, function() {
+							if(content.length >= 100) {
+								sendMessage(api_url, 'Не верный формат, введите адрес или координаты.', chat_id, token, function() {
 									res.end();
 								});
 							}
 							else {
-								sendMessage(api_url, 'Не верный формат, введите адрес или координаты.', chat_id, token, function() {
-									res.end();
-								});
+								if(content.length >= 30) {
+									content = JSON.parse(content);
+								}
+								if(content.latitude) {
+									request('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + content.latitude + ',' + content.longitude + '&key=AIzaSyDbcJBaK7ke05PH8jujhk1FmbpvoSH93hY&language=ru', function (error, response, body) {
+										if (!error && response.statusCode == 200) {
+											body = JSON.parse(body);
+											instance.address = body.results[0].formatted_address;
+											Chat.update(condition, instance, null, function() {
+												res.end();
+											});
+										}
+										else {
+											sendMessage(api_url, 'Ошибка, введите свои координаты.', chat_id, token, function() {
+												res.end();
+											});
+										}
+										
+									});
+									
+								}
+								else if(content.length <= 30){
+									instance.address = content;
+									Chat.update(condition, instance, null, function() {
+										res.end();
+									});
+								}
+								else {
+									sendMessage(api_url, 'Не верный формат, введите адрес или координаты.', chat_id, token, function() {
+										res.end();
+									});
+								}
 							}
 						});
 					});

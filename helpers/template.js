@@ -24,7 +24,7 @@ exports.askFare = function(data)
 
 exports.askPhoneNumber = function()
 {
-	return 'Ок, теперь отправьте свой номер телефона.';
+	return 'Ок, теперь отправьте свой номер телефона в формате 0557XXXXXX';
 }
 
 exports.summary = function(object,phone_number)
@@ -38,7 +38,7 @@ exports.summary = function(object,phone_number)
 
 exports.notPhoneNumber = function()
 {
-	return 'Неверный формат\uE413\n\"996557996009\"\n\uE00F Поробуй вот так.'
+	return 'Неверный формат\uE413\n\"996557XXXXXX,0557XXXXXX\"\n\uE00F Поробуй вот так.'
 }
 
 exports.notFare = function(data)
