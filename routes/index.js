@@ -95,6 +95,11 @@ router.post('/', function(req, res, next) {
 						});
 					});
 				}
+				else if(instance.state == 3 && content.length >= 30) {
+					sendMessage(api_url, template.notPhoneNumber(), chat_id, token, function() {
+						res.end();
+					});
+				}
 				else if(instance.state != 1 && content.length >= 30) {
 					sendMessage(api_url, 'Не верный формат, введите текст.', chat_id, token, function() {
 						res.end();

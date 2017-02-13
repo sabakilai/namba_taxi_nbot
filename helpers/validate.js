@@ -35,7 +35,7 @@ exports.isPhoneNumber = function(value)
 exports.isFare = function(value, obj)
 {
 	value = value.toLowerCase();
-	if(!isNaN(value) && value <= obj.length && value != '0')
+	if(!isNaN(value) && value <= obj.length && value >= 1)
 	{
 		return true;
 	}

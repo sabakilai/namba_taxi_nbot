@@ -127,7 +127,7 @@ setInterval(function() {
       console.error(err);
     });
   });
-}, 3600000);
+}, 3600);
 
 
 //every 15sec send post request to check and updated statuses
