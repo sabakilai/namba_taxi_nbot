@@ -129,9 +129,14 @@ router.post('/', function(req, res, next) {
 								});
 								
 							}
-							else {
+							else if(content.length <= 30){
 								instance.address = content;
 								Chat.update(condition, instance, null, function() {
+									res.end();
+								});
+							}
+							else {
+								sendMessage(api_url, 'Не верный формат, введите адрес или координаты.', chat_id, token, function() {
 									res.end();
 								});
 							}
@@ -145,7 +150,6 @@ router.post('/', function(req, res, next) {
 							sendMessage(api_url, template.askPhoneNumber(), chat_id, token, function() {
 								console.log(content)
 								if(isNaN(content)) {
-									console.log('*****');
 									instance.state = 3;
 									instance.fare = content;
 									Chat.update(condition, instance, null, function() {
@@ -153,7 +157,6 @@ router.post('/', function(req, res, next) {
 									});
 								}
 								else {
-									console.log('-----');
 									instance.state = 3;
 									instance.fare = faresData[content - 1].name;
 									Chat.update(condition, instance, null, function() {

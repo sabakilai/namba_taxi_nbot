@@ -1,8 +1,23 @@
 exports.isPhoneNumber = function(value)
 {
+	counter = 0;
+	for(let key in value)
+	{
+		if(!isNaN(value[key]))
+		{
+			counter ++;
+		}
+	}
+	/* if non number exists in number*/
+	if(value.length != counter)
+		return false;
+	if(counter == 10 && value.substr(0, 1) == '0') {
+		value = value.replace("0", "996");
+	}
+
 	if(value.substr(0, 3) != '996')
 		return false;
-	let counter = 0;
+	counter = 0;
 	for(let key in value)
 	{
 		if(!isNaN(value[key]))
