@@ -32,13 +32,13 @@ exports.summary = function(object,phone_number)
 	let result = 'Откуда:' + object.address + '\n';
 	result += 'Тариф:' + object.fare + '\n';
 	result += 'Тел:' + phone_number + '\n';
-	result += 'Отправьте \"Да\" чтобы оформить заказ.\uE15A';
+	result += 'Отправьте \"Да\" чтобы оформить заказ, \"Нет\" чтобы отменить заказ. \uE15A';
 	return result;
 }
 
 exports.notPhoneNumber = function()
 {
-	return 'Неверный формат\uE413\n\"996557XXXXXX,0557XXXXXX\"\n\uE00F Поробуй вот так.'
+	return 'Вы ввели неверный номер телефона, повторите ввод телефона в формате 0557XXXXXX';
 }
 
 exports.notFare = function(data)

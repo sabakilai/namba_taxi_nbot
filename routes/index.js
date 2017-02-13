@@ -88,7 +88,14 @@ router.post('/', function(req, res, next) {
 				var instance = chat;
 			}
 			instance.save(function(err) {	
-				if(instance.state != 1 && content.length >= 30) {
+				if(instance.state == 2 && content.length >= 30) {
+					jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
+						sendMessage(api_url, 'Не верный формат, выберите тариф.\n' + template.askFare(faresData), chat_id, token, function() {
+							res.end();
+						});
+					});
+				}
+				else if(instance.state != 1 && content.length >= 30) {
 					sendMessage(api_url, 'Не верный формат, введите текст.', chat_id, token, function() {
 						res.end();
 					});
