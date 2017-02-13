@@ -51,8 +51,8 @@ router.post('/', function(req, res, next) {
 	}
 	
 	else if(event_name == 'user/unfollow') {
-		let user_id = req.body.data.id;
-		Chat.remove({ chat_id: chat_id, api_url: api_url }, function (err) {
+		let sender_id = req.body.data.id;
+		Chat.remove({ sender_id: sender_id, api_url: api_url }, function (err) {
 			if (err) {
 				throw err;
 			}
@@ -64,11 +64,13 @@ router.post('/', function(req, res, next) {
 	{
 		var content = req.body.data.content;
 		let chat_id = req.body.data.chat_id;
+		let sender_id = req.body.data.sender_id;
 		var addInstance = false;
 
 		condition = {
 			chat_id: chat_id ,
-			api_url: api_url
+			api_url: api_url,
+			sender_id: sender_id
 		}
 
 		Chat.findOne(condition, function(err, chat) {
@@ -77,6 +79,7 @@ router.post('/', function(req, res, next) {
 				var instance = Chat({
 					chat_id: chat_id ,
 					api_url: api_url ,
+					sender_id: sender_id,
 					state: 0
 				});
 				addInstance = true;
@@ -105,6 +108,9 @@ router.post('/', function(req, res, next) {
 					jsonfile.readFile(__dirname + '/../faresData.json', function(err, faresData) {
 						sendMessage(api_url, template.askFare(faresData), chat_id, token, function() {
 							instance.state = 2;
+							if(content.length >= 30) {
+								content = JSON.parse(content);
+							}
 							if(content.latitude) {
 								request('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + content.latitude + ',' + content.longitude + '&key=AIzaSyDbcJBaK7ke05PH8jujhk1FmbpvoSH93hY&language=ru', function (error, response, body) {
 									if (!error && response.statusCode == 200) {
@@ -205,6 +211,7 @@ router.post('/', function(req, res, next) {
 													chat_id: chat_id,
 													api_url: api_url,
 													order_id: result.order_id,
+													sender_id: sender_id,
 													status: 0
 												});
 												statusInstance.save(function(err) {

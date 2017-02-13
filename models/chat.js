@@ -6,6 +6,10 @@ var chat = new Schema({
     type: Number,
     required: true
   },
+  sender_id: {
+    type: Number,
+    required: true
+  },
   chat_id: {
     type: Number,
     required: true
