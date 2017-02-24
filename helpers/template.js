@@ -15,7 +15,7 @@ exports.askFare = function(data)
 	for(let key in data)
 	{
 
-		message += numbers[key] + data[key].name + ' Посадка ' + data[key].flagfall + ',' + data[key].cost_per_kilometer + 'сом/км\n';
+		message += numbers[key] + data[key].name + ' Посадка:' + data[key].flagfall + ' сом, Цена за км:' + data[key].cost_per_kilometer + 'сом.\n';
 	}
 	message += ' - Какой тариф предпочитаете?';
 	return message;
