@@ -5,7 +5,7 @@ var request = require('request');
 
 // Bot settings
 var chat_name = 'Намба Такси';
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIxLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IjMxMDU3ZjUyMTU4MDkxMGI2ZWY3MjVjZmU1NzU4NGMyIiwiaXNCb3QiOnRydWUsImNvdW50cnkiOnRydWUsImlhdCI6MTQ4NTMzMDY4M30.d7GPBHrS6dY5OzYEf4skDaAfMasIAO4SfkEP4RS9fw8';
+var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OTUwMjYzNDQwLCJwaG9uZSI6IjA1NTk5NzYwMDAiLCJwYXNzd29yZCI6IiQyYSQxMCRPWmlvbUFWMXNZSWJWSlBTWUVxLzV1VmZYUjNxc2RFejVCazdJZml1eGxRYUZsNFBwUkFENiIsImlzQm90Ijp0cnVlLCJjb3VudHJ5Ijp0cnVlLCJpYXQiOjE0ODk0NzMzMzN9.bYKzEC4uKkC6b_MK_jY_3BLLszGGUec4arGzQC8XJBM';
 var img_token = '';
 var axilary_ids = [1, 11, 21, 2382];
 
