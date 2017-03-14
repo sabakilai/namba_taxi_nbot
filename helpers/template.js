@@ -10,11 +10,10 @@ exports.askAdress = function()
 
 exports.askFare = function(data)
 {
-	let numbers = ['\uE21C','\uE21D','\uE21E','\uE21F','\uE220','\uE221','\uE222'];
+	var numbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣'];
 	let message = '';
 	for(let key in data)
 	{
-
 		message += numbers[key] + data[key].name + ' Посадка:' + data[key].flagfall + ' сом, Цена за км:' + data[key].cost_per_kilometer + 'сом.\n';
 	}
 	message += ' - Какой тариф предпочитаете?';
@@ -32,7 +31,7 @@ exports.summary = function(object,phone_number)
 	let result = 'Откуда:' + object.address + '\n';
 	result += 'Тариф:' + object.fare + '\n';
 	result += 'Тел:' + phone_number + '\n';
-	result += 'Отправьте \"Да\" чтобы оформить заказ, \"Нет\" чтобы отменить заказ. \uE15A';
+	result += 'Отправьте \"Да\" чтобы оформить заказ, \"Нет\" чтобы отменить заказ.';
 	return result;
 }
 
@@ -43,8 +42,8 @@ exports.notPhoneNumber = function()
 
 exports.notFare = function(data)
 {
-	message = 'Неверный формат\uE413\nВведите название тарифа или его номер.\n';
-	let numbers = ['\uE21C','\uE21D','\uE21E','\uE21F','\uE220','\uE221','\uE222'];
+	message = 'Неверный формат.\nВведите название тарифа или его номер.\n';
+	var numbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣'];
 	for(let key in data)
 	{
 
