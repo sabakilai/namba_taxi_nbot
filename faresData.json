@@ -1,1 +1,1 @@
-[{"name":"Стандарт","flagfall":50,"cost_per_kilometer":10},{"name":"Минивэн","flagfall":100,"cost_per_kilometer":10},{"name":"Комфорт","flagfall":70,"cost_per_kilometer":15},{"name":"Байк+","flagfall":100,"cost_per_kilometer":10},{"name":"Портер","flagfall":0,"cost_per_kilometer":0}]
+[{"name":"Стандарт","flagfall":50,"cost_per_kilometer":15},{"name":"Минивэн","flagfall":100,"cost_per_kilometer":15},{"name":"Комфорт","flagfall":100,"cost_per_kilometer":20},{"name":"Байк+","flagfall":100,"cost_per_kilometer":10},{"name":"Портер","flagfall":500,"cost_per_kilometer":0}]
